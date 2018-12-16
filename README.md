@@ -24,3 +24,18 @@ liri.js can take in one of the following commands:
 `node liri.js spotify-this-song 'Sexyback'`
 ![Image of movie-this](images/spotify.png)
 
+`node liri.js do-what-it-says`
+![Image of movie-this](images/do-what-it-says.png)
+
+### Dependencies and Requirements to run Liribot
+
+The following are required to run Liritbot
+
+  * axios
+  * dotenv
+  * inquirer
+  * moment 
+  * spotify api - requires your own API key
+  * random-item
+  * request 
+

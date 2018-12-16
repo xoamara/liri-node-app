@@ -3,7 +3,6 @@ require("dotenv").config();
 var Spotify = require('node-spotify-api');
 var keys = require("./keys.js");
 var request = require("request");
-var inquirer = require("inquirer");
 var moment = require("moment");
 var fs = require("fs");
 let randomItem = require('random-item')
@@ -19,19 +18,17 @@ let liriInput = process.argv[3];
 // console.log("Please enter a one of the following commands followed by a song title, a concert artist, or a movie!\n\r  spotify-this-song 'song title'\n\r  concert-this 'artist name'\n\r  movie-this 'movie title'\n\r");
 
 
-
-
 switch (liriCommand) {
     case "concert-this":
-        concert();
+        concert(liriInput);
         break;
 
     case "spotify-this-song":
-        song();
+        song(liriInput);
         break;
 
     case "movie-this":
-        movie();
+        movie(liriInput);
         break;
 
     case "do-what-it-says":
@@ -40,8 +37,8 @@ switch (liriCommand) {
 
 }
 
-function concert() {
-    request("https://rest.bandsintown.com/artists/" + liriInput + "/events?app_id=codingbootcamp&date=upcoming",
+function concert(input) {
+    request("https://rest.bandsintown.com/artists/" + input + "/events?app_id=codingbootcamp&date=upcoming",
         function (error, response, body) {
             // Save response to a variable and parse
             let data = JSON.parse(body);
@@ -60,11 +57,11 @@ function concert() {
 
 
 //TODO, return The Sign by Ace of Base if liriInput is undefined.
-function song() {
+function song(input) {
 
     var spotify = new Spotify(keys.spotify);
 
-    spotify.search({ type: 'track', query: liriInput, limit: 5 }, function (err, data) {
+    spotify.search({ type: 'track', query: input, limit: 5 }, function (err, data) {
 
         let songArtist = data.tracks.items[0].artists[0].name;
         let songName = data.tracks.items[0].name;
@@ -104,9 +101,9 @@ function song() {
     });
 }
 
-function movie() {
+function movie(input) {
 
-    var movieName = liriInput;
+    var movieName = input;
 
     // Then run a request to the OMDB API with the movie specified
 
@@ -121,7 +118,8 @@ function movie() {
         console.log("Title: " + data.Title);
         console.log("Release year: " + data.Year);
         console.log("IMBD Rating: " + data.imdbRating);
-        console.log("Rotten Tomatoes Rating: " + data.Ratings[1].Value);
+        console.log("Rotten Tomatoes Rating: " + (typeof data.ratings !== 'undefined' ? + data.Ratings[1] : 'None'));
+        //'text' + (typeof data.ratings !== 'undefined' ? data.ratings[0] : 'no rating');
         console.log("Movie produced in " + data.Country);
         console.log("Plot Info: " + data.Plot);
         console.log("Starring: " + data.Actors);
@@ -146,21 +144,21 @@ function doWhat() {
 
         // Then split it by commas (to make it more readable)
         var randomText = data.split("\n");
-        console.log(randomText);
         let liriRandom= randomItem(randomText).split(',');
 
         // We will then re-display the content as an array for later use.
 
         if (liriRandom[0] === 'spotify-this-song') {
-            liriInput = liriRandom[1];
+            song(liriRandom[1]);
 
 
         } else if (liriRandom[0] === 'concert-this') {
-            liriInput = liriRandom[1];
+            console.log(liriRandom[1]);
+            concert(liriRandom[1].trim());
 
 
         } else if (liriRandom[0] === 'movie-this') {
-            liriInput = liriRandom[1];
+            movie(liriRandom[1]);
 
         }
 
