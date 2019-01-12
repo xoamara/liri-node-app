@@ -39,3 +39,15 @@ The following are required to run Liritbot
   * random-item
   * request 
 
+
+### Spotify API key instructions
+Create a file named `.env` in the running directory, add the following to it, replacing the values with your API keys (no quotes) once you have them:
+
+```js
+# Spotify API keys
+
+SPOTIFY_ID=your-spotify-id
+SPOTIFY_SECRET=your-spotify-secret
+
+```
+
